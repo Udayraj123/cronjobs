@@ -25,7 +25,8 @@ fi
 # replace background file name in grub source file
 sed -i "s|$CURR_FILE|$NEXT_FILE|g" /etc/default/grub
 
-notify-send "Grub BG Changer" ": Changed bg image to $NEXT_FILE"
+# Send a notification
+notify-send "Grub BG Changer" "Changed bg image to $NEXT_FILE"
 echo $(date +%d/%m' '%T) ": Changed bg image to $NEXT_FILE" >> /home/udayraj021/cronJobs/cronLog
 
 # replace background file name in grub configuration file
