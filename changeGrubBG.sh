@@ -55,4 +55,4 @@ echo $msg >> $USER_HOME/cronJobs/cronLog
 # cp /boot/grub/grub.cfg /boot/grub/grub.cfg~
 # sed -i "s|$CURR_FILE|$NEXT_FILE|g" /boot/grub/grub.cfg
 
-# update-grub >> $USER_HOME/cronJobs/cronLog
+update-grub >> $USER_HOME/cronJobs/cronLog
