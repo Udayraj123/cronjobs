@@ -11,7 +11,8 @@
 USER_NAME=udayraj
 USER_HOME=/home/$USER_NAME
 
-# e.g. GRUB_BACKGROUND="$USER_HOME/Pictures/grubs/cat1.jpg" (number not necessary, any filename will do)
+# This line is expected to exist already in /etc/default/grub
+# GRUB_BACKGROUND="some/random/path"
 CURR_FILE=$(cat /etc/default/grub | grep BACKGROUND) # Get grub current line
 CURR_FILE=$(cut -d "=" -f 2 <<< "$CURR_FILE")        # File name only
 CURR_FILE=$(echo "$CURR_FILE" | tr -d '"')           # Remove double quotes

@@ -40,6 +40,7 @@ done;
 # echo -e "$output"; # -e for  printing \n
 # printf "$output"; # alternative.
 OKoutput=$(echo -e "$output"| grep "OK")
+DISPLAY=:0.0 #needed when inside cron 
 notify-send "Proxies Scan Report" "$OKoutput";
 echo -e $(date +%d/%m' '%T) "Proxies Scan Report:\n" "$OKoutput" >> $HOME/cronJobs/cronLog
 
