@@ -41,3 +41,4 @@ cronLog "Done.";
 cat ignore/del.html | grep --color my-profile
 
 LOGIN_DATA='clearedpass';
+
