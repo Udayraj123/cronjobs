@@ -19,6 +19,15 @@ USER_HOME=/home/$USER_NAME
 
 IMG_DIR=$USER_HOME/Pictures/grubs;
 SAMPLE_IMG="_sample.jpg";
+
+# utility logger
+cronLog(){
+    msg="[$(date +%d/%m' '%T)] $1";
+    echo $msg;
+    touch ./cronLog;
+    echo $msg >> ./cronLog;
+}
+
 # Check directory exists
 if [ ! -d $IMG_DIR ]; then
     echo "Directory '$IMG_DIR' doesn't exist. Creating one now:"
@@ -26,6 +35,9 @@ if [ ! -d $IMG_DIR ]; then
     echo "Put some backgrounds for grub in '$IMG_DIR' and run again"
     exit 1;
 fi
+
+echo "Updating permissions for directory: '$IMG_DIR'";
+chmod -R 777 $IMG_DIR;
 
 # line is:  GRUB_BACKGROUND="/path/to/your/bg.jpg"
 CURR_FILE=$(cat /etc/default/grub | grep BACKGROUND) # Get grub current line
@@ -43,10 +55,12 @@ echo
 echo "Searching in Image directory $_green '$IMG_DIR' $_reset";
 ls $IMG_DIR;
 echo 
-echo $(date +%d/%m' '%T) ": Current bg : $_green '$CURR_FILE' $_reset";
+# echo $(date +%d/%m' '%T) ": Current bg : $_green '$CURR_FILE' $_reset";
+cronLog "Current bg : $_green '$CURR_FILE' $_reset";
 
 shopt -s nullglob # set nullglob; If no files exist, make the string null!
 JPG_IMAGES="$IMG_DIR/*.jpg"
+# Currently requires atleast 1 png file to be present
 PNG_IMAGES="$IMG_DIR/*.png"
 ALL_IMAGES="$JPG_IMAGES $PNG_IMAGES";
 # TODO - Remove this dependency-
@@ -87,14 +101,15 @@ chmod 777 ./grub.backup;
 # replace background file path in grub source file
 sed -i "s|$CURR_FILE|$NEXT_FILE|g" /etc/default/grub
 
-msg="$(date +%d/%m' '%T) : Changed bg image to '$NEXT_FILE_NAME'";
-echo $msg;
+cronLog "Changed bg image to '$NEXT_FILE_NAME'";
+echo "Updated Grub file: ";
+echo;
+cat /etc/default/grub;
 
 # Send a notification
 DISPLAY=:0.0 #needed when inside cron 
 su $USER_NAME -c "notify-send \"Grub BG Changer\" \"Changed bg image to '$NEXT_FILE_NAME'\""
 # ^Single quotes won't decode the variables beforehand
-echo $msg >> ./cronLog
 
 # replace background file name in grub configuration file
 # ^Short cut so we don't have to run `sudo update-grub`
