@@ -5,6 +5,11 @@ cronLog(){
 	touch ./cronLog;
 	echo $msg >> ./cronLog;
 }
+# Plain method:
+# EMAIL='stackoverflowyouremailhere';
+# PASSWD='yourpasswordhere';
+# LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
+
 if [ ! -d ignore ]; then 
 	echo "Creating ignore directory..";
 	mkdir ignore;
@@ -22,11 +27,6 @@ if [ ! -f $login_file ]; then
 	touch $login_file;
 	echo "$LOGIN_DATA" | openssl enc -aes-128-cbc -a -salt -pass pass:mysalt > $login_file;	
 fi
-
-# Plain method:
-# EMAIL='stackoverflowyouremailhere';
-# PASSWD='yourpasswordhere';
-LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
 
 # (pseudo) Encrypted method:
 echo "Loading details from encrypted file";
