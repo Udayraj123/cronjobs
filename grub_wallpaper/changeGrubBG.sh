@@ -18,11 +18,12 @@ USER_HOME=/home/$USER_NAME
 # TODO- resolve - This line is expected to exist already in /etc/default/grub
 
 IMG_DIR=$USER_HOME/Pictures/grubs;
+SAMPLE_IMG="_sample.jpg";
 # Check directory exists
 if [ ! -d $IMG_DIR ]; then
-    echo "Directory '$IMG_DIR' doesn't exist. Creating now:"
+    echo "Directory '$IMG_DIR' doesn't exist. Creating one now:"
     mkdir $IMG_DIR;
-    echo "Put your backgrounds for grub there!"
+    echo "Put some backgrounds for grub in '$IMG_DIR' and run again"
     exit 1;
 fi
 
@@ -30,10 +31,9 @@ fi
 CURR_FILE=$(cat /etc/default/grub | grep BACKGROUND) # Get grub current line
 # Check BG line exists
 if [[ "$CURR_FILE" == "" ]]; then
-    echo "No previous bg set. Adding a dummy image:";
-    cp ./dummy.jpg $IMG_DIR/dummy.jpg
-    chmod 777 $IMG_DIR/dummy.jpg;
-    echo "GRUB_BACKGROUND=$IMG_DIR/dummy.jpg" | sudo tee -a /etc/default/grub
+    echo "No existing GRUB_BACKGROUND line found in config. Adding new one..";    
+    #here sample_img works as a dummy
+    echo "GRUB_BACKGROUND=""$IMG_DIR""/""$SAMPLE_IMG" | sudo tee -a /etc/default/grub
 fi
 CURR_FILE=$(cat /etc/default/grub | grep BACKGROUND) # Get grub current line
 CURR_FILE=$(cut -d "=" -f 2 <<< "$CURR_FILE")        # File path only
@@ -43,7 +43,7 @@ echo
 echo "Searching in Image directory $_green '$IMG_DIR' $_reset";
 ls $IMG_DIR;
 echo 
-echo $(date +%d/%m' '%T) ": Found current bg as : $_green '$CURR_FILE' $_reset";
+echo $(date +%d/%m' '%T) ": Current bg : $_green '$CURR_FILE' $_reset";
 
 shopt -s nullglob # set nullglob; If no files exist, make the string null!
 JPG_IMAGES="$IMG_DIR/*.jpg"
@@ -53,8 +53,11 @@ ALL_IMAGES="$JPG_IMAGES $PNG_IMAGES";
 shopt -u nullglob # make it back to unset!
 
 if [[ "$ALL_IMAGES" == " " ]]; then
-    echo "No images found in $IMG_DIR!";
-    exit 1;
+    echo "No images found in $IMG_DIR! Adding sample..";
+    cp "$SAMPLE_IMG" "$IMG_DIR""/""$SAMPLE_IMG";
+    chmod -R 777 $IMG_DIR;
+    # exit 1;
+    ALL_IMAGES="$IMG_DIR""/""$SAMPLE_IMG";
 fi
 for LOOP_FILE in $ALL_IMAGES; do # Loop through every file
 if [[ "$FIRST_FILE" == "" ]]; then
@@ -63,8 +66,8 @@ elif [[ "$MATCH_FILE" != "" ]]; then
     NEXT_FILE="$LOOP_FILE"
      # We've got it!
      break
- fi
- if [[ "$CURR_FILE" == "$LOOP_FILE" ]]; then
+fi 
+if [[ "$CURR_FILE" == "$LOOP_FILE" ]]; then
     # We found our current bg 
     MATCH_FILE="$LOOP_FILE" 
 fi
@@ -76,11 +79,16 @@ if [[ "$NEXT_FILE" == "" ]]; then
 fi
 
 NEXT_FILE_NAME=$(basename "$NEXT_FILE");
-msg="$(date +%d/%m' '%T) : Changed bg image to '$NEXT_FILE_NAME'";
-echo $msg;
+
+echo "Making backup of grub file before making changes at './grub.backup'";
+cp /etc/default/grub ./grub.backup;
+chmod 777 ./grub.backup;
 
 # replace background file path in grub source file
 sed -i "s|$CURR_FILE|$NEXT_FILE|g" /etc/default/grub
+
+msg="$(date +%d/%m' '%T) : Changed bg image to '$NEXT_FILE_NAME'";
+echo $msg;
 
 # Send a notification
 DISPLAY=:0.0 #needed when inside cron 
