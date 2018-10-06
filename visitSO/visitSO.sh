@@ -38,6 +38,7 @@ cronLog "Done. Visiting Home page..";
 curl -o ignore/del.html -L -b ./ignore/headers https://stackoverflow.com/
 echo
 cronLog "Done.";
-cat ignore/del.html | grep --color my-profile
+output=$(cat ignore/del.html | grep --color my-profile);
+cronLog "$output";
 
 LOGIN_DATA='clearedpass';
