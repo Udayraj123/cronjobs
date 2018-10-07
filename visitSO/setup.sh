@@ -66,7 +66,7 @@ CRON_LINE="0 */6 * * * bash $FULL_PATH ;";
 echo "$_blue Confirm the cron line to add: $_yellow"
 # colors dont go well with read command
 read -i "$CRON_LINE" -e CRON_LINE
-echo "$_reset";
+echo -ne "$_reset";
 # assigning command returns the return signal of RHS
 # output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
 # but newline characters get lost!
@@ -93,5 +93,6 @@ echo "$CRON_LINE" >> ./tmp_cron;
 crontab ./tmp_cron;
 rm ./tmp_cron;
 echo "$_green Done adding. $_reset";
-echo "$_blue  Listing crontable: $_reset";
+echo "$_green Listing crontable: ";
 crontab -l;
+echo "$_reset";

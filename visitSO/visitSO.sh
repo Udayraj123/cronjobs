@@ -1,9 +1,3 @@
-# colors!
-_black=$(tput setaf 0);	_red=$(tput setaf 1);
-_green=$(tput setaf 2);	_yellow=$(tput setaf 3);
-_blue=$(tput setaf 4);	_magenta=$(tput setaf 5);
-_cyan=$(tput setaf 6);	_white=$(tput setaf 7);
-_reset=$(tput sgr0);		_bold=$(tput bold);
 
 # when run from full path
 FILE_DIR="${BASH_SOURCE%/*}";
@@ -23,20 +17,20 @@ cronLog(){
 # LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
 
 if [ ! -d $FILE_DIR/ignore ]; then 
-	echo "$_yellow Creating ignore directory..";
+	echo " Creating ignore directory..";
 	mkdir $FILE_DIR/ignore;
 fi
 
 login_file="$FILE_DIR/ignore/so.encpwd"
 if [ ! -f $login_file ]; then 
-	echo "$_yellow Password file not found(First run?). Creating one now: ";
+	echo " Password file not found(First run?). Creating one now: ";
 	#Set password into encrypted file
-	echo -n "$_blue Enter SO email: ";
+	echo -n " Enter SO email: ";
 	read EMAIL
-	echo -n "$_blue Enter password for '$EMAIL' : ";
+	echo -n " Enter password for '$EMAIL' : ";
 	read -rs PASSWD
 	LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
-	echo "$_blue Saving details in (pseudo)encrypted file";
+	echo " Saving details in (pseudo)encrypted file";
 	touch $login_file;
 	echo "$LOGIN_DATA" | openssl enc -aes-128-cbc -a -salt -pass pass:mysalt > $login_file;	
 fi
