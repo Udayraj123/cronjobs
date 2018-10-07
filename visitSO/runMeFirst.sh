@@ -28,8 +28,8 @@ fi
 crontab -l > ./tmp_cron
 # msg goes into stderr
 FILE_NAME="visitSO.sh"
-FILE_PATH="$(pwd)/$FILE_NAME";
-CRON_LINE="0 */6 * * * $FILE_PATH";
+FILE_PATH="$(pwd)";
+CRON_LINE="0 */6 * * * cd $FILE_PATH && bash $FILE_PATH/$FILE_NAME";
 read -p "Confirm the cron line: " -i "$CRON_LINE" -e CRON_LINE
 
 cat ./tmp_cron | grep --color "$FILE_PATH"
