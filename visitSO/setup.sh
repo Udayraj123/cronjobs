@@ -69,21 +69,21 @@ echo -ne "$_reset";
 # but newline characters get lost!
 
 echo "$_blue Checking if the job exists already.. $_reset";
-echo "${_yellow}Running crontab -l ";
+echo "${_yellow}Running crontab -l $_reset";
 # msg goes into stderr
 crontab -l > ./tmp_cron 2> /dev/null
 cat ./tmp_cron | grep -A 10 -B 10 --color "$FILE_DIR";
 
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
-	echo "$_yellow Similar job(s) already present in cron table: $_reset";
-	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
+	echo "$_red Similar job(s) already present in cron table: $_reset";
 	read -p "$_yellow Do you still want to continue adding the line? (any/n) $_reset" -i "n" CONTINUE;
 	if [ "$CONTINUE" == "n" ];then
 		echo "$_green Exiting $_reset";
 		rm ./tmp_cron;
 		exit 0;
 	fi
+	echo "$_yellow Note: you can clear the cron table later by running 'crontab -r' $_reset"
 else
 	cat ./tmp_cron
 	echo "$_blue No matching entry exists.";
