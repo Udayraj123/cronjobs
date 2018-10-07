@@ -17,7 +17,7 @@ if [ ! -d $FILE_DIR/ignore ]; then
 	mkdir $FILE_DIR/ignore;
 fi
 
-login_file="./$FILE_DIR/ignore/so.encpwd"
+login_file="$FILE_DIR/ignore/so.encpwd"
 if [ ! -f $login_file ]; then 
 	echo "Password file not found(First run?). Creating one now: ";
 	#Set password into encrypted file
