@@ -20,12 +20,17 @@ USER_HOME=/home/$USER_NAME
 IMG_DIR=$USER_HOME/Pictures/grubs;
 SAMPLE_IMG="_sample.jpg";
 
+# when run from full path
+FILE_DIR="${BASH_SOURCE%/*}";
+# when run locally
+if [ ! -d $FILE_DIR ] || [ "$FILE_DIR" == "." ]; then FILE_DIR="$PWD"; fi
+
 # utility logger
 cronLog(){
     msg="[$(date +%d/%m' '%T)] $1";
     echo $msg;
-    touch ./cronLog;
-    echo $msg >> ./cronLog;
+    touch $FILE_DIR/cronLog;
+    echo $msg >> $FILE_DIR/cronLog;
 }
 
 # Check directory exists

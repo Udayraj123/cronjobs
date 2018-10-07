@@ -4,15 +4,17 @@
 #     echo "Please run as root";
 #     exit 1;
 # fi
+
+# colors!
 _black=$(tput setaf 0);	_red=$(tput setaf 1);
 _green=$(tput setaf 2);	_yellow=$(tput setaf 3);
 _blue=$(tput setaf 4);	_magenta=$(tput setaf 5);
 _cyan=$(tput setaf 6);	_white=$(tput setaf 7);
 _reset=$(tput sgr0);		_bold=$(tput bold);
 
-echo "$_cyan Welcome to SO Login Script! $_reset"
+echo "$_cyan WELCOME TO SO LOGIN SCRIPT! $_reset"
 echo "$_cyan Complete the Enthusiast & Fanatic badges by adding this simple cron job! $_reset";
-
+echo
 FILE_NAME="visitSO.sh"
 # read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
 
@@ -49,7 +51,7 @@ if [ ! -f $login_file ]; then
 	echo -n "$_blue Enter password for '$EMAIL' : ";
 	read -rs PASSWD
 	LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
-	echo "$_blue Saving details in encrypted file";
+	echo "$_blue Saving details in (pseudo)encrypted file";
 	touch $login_file;
 	echo "$LOGIN_DATA" | openssl enc -aes-128-cbc -a -salt -pass pass:mysalt > $login_file;	
 fi
@@ -63,12 +65,12 @@ CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 read -i "$CRON_LINE" -e CRON_LINE
 
 # assigning command returns the return signal of RHS
-# but newline characters get lost
 # output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
+# but newline characters get lost!
+
 cat ./tmp_cron | grep --color "$FILE_DIR";
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
-	echo
 	echo "$_yellow Seems like a similar job entry is already present in cron table.$_reset";
 	echo -ne $output;
 	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
