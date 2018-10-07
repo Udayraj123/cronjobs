@@ -57,9 +57,6 @@ if [ ! -f $login_file ]; then
 fi
 
 
-# msg goes into stderr
-crontab -l > ./tmp_cron 2> /dev/null
-
 # echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
 # CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 CRON_LINE="0 */6 * * * bash $FULL_PATH ;";
@@ -72,7 +69,11 @@ echo -ne "$_reset";
 # but newline characters get lost!
 
 echo "$_blue Checking if the job exists already.. $_reset";
-cat ./tmp_cron | grep --color "$FILE_DIR";
+echo "${_yellow}Running crontab -l ";
+# msg goes into stderr
+crontab -l > ./tmp_cron 2> /dev/null
+cat ./tmp_cron | grep -A 10 -B 10 --color "$FILE_DIR";
+
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
 	echo "$_yellow Similar job(s) already present in cron table: $_reset";
@@ -84,6 +85,7 @@ if [ "$FOUND" == "0" ]; then
 		exit 0;
 	fi
 else
+	cat ./tmp_cron
 	echo "$_blue No matching entry exists.";
 fi
 echo "$_blue Adding cron job.. $_reset"
@@ -94,6 +96,5 @@ crontab ./tmp_cron;
 rm ./tmp_cron;
 echo "$_green Done adding. $_reset";
 echo "$_green Listing crontable: $_reset";
-echo "$_yellow crontab -l ";
 crontab -l;
 echo "$_reset";
