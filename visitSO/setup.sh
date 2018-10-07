@@ -13,7 +13,7 @@ _cyan=$(tput setaf 6);	_white=$(tput setaf 7);
 _reset=$(tput sgr0);		_bold=$(tput bold);
 
 echo "$_cyan WELCOME TO SO LOGIN SCRIPT! $_reset"
-echo "$_cyan Complete the Enthusiast & Fanatic badges by adding this simple cron job! $_reset";
+echo "$_cyan Complete the Enthusiast & Fanatic badges by adding a simple cron job! $_reset";
 echo
 FILE_NAME="visitSO.sh"
 # read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
@@ -29,7 +29,7 @@ if [ ! -e $FULL_PATH ]; then
 	echo "$_yellow Warning: visitSO.sh File not found at '$FULL_PATH' $_reset";
 	echo "$_red The cron job may not have any effect, Do you want to continue? (any/n) $_reset"
 	read CONTINUE;
-	if [ $CONTINUE == "n" ];then
+	if [ "$CONTINUE" == "n" ];then
 		echo "Exiting";
 		exit 0;
 	fi
@@ -60,22 +60,23 @@ fi
 # msg goes into stderr
 crontab -l > ./tmp_cron 2> /dev/null
 
-echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
-CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
-read -i "$CRON_LINE" -e CRON_LINE
+# echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
+# CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
+CRON_LINE="0 */6 * * * bash $FULL_PATH ;";
+read -p "$_blue Confirm the cron line to add: " -i "$CRON_LINE" -e CRON_LINE
 
 # assigning command returns the return signal of RHS
 # output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
 # but newline characters get lost!
 
+echo "Checking if cron job exists already: ";
 cat ./tmp_cron | grep --color "$FILE_DIR";
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
-	echo "$_yellow Seems like a similar job entry is already present in cron table.$_reset";
-	echo -ne $output;
+	echo "$_yellow Similar job(s) already present in cron table: $_reset";
 	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
 	read -p "$_yellow Do you still want to add this line? (any/n) $_reset" CONTINUE;
-	if [ $CONTINUE == "n" ];then
+	if [ "$CONTINUE" == "n" ];then
 		echo "$_green Exiting $_reset";
 		rm ./tmp_cron;
 		exit 0;
