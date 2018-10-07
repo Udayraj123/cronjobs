@@ -63,13 +63,15 @@ crontab -l > ./tmp_cron 2> /dev/null
 # echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
 # CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 CRON_LINE="0 */6 * * * bash $FULL_PATH ;";
-read -p "$_blue Confirm the cron line to add: " -i "$CRON_LINE" -e CRON_LINE
+echo "$_blue Confirm the cron line to add: $_reset"
+# colors dont go well with read command
+read -i "$CRON_LINE" -e CRON_LINE
 
 # assigning command returns the return signal of RHS
 # output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
 # but newline characters get lost!
 
-echo "Checking if cron job exists already: ";
+echo "$_blue Checking if the job exists already.. $_reset";
 cat ./tmp_cron | grep --color "$FILE_DIR";
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
@@ -81,6 +83,8 @@ if [ "$FOUND" == "0" ]; then
 		rm ./tmp_cron;
 		exit 0;
 	fi
+else;
+	echo "$_blue No matching entry exists.";
 fi
 echo "$_blue Adding cron job.. $_reset"
 #echo new cron into cron file
@@ -88,5 +92,6 @@ echo "$CRON_LINE" >> ./tmp_cron;
 #install new cron file
 crontab ./tmp_cron;
 rm ./tmp_cron;
-echo "$_green Done adding. Listing crontable: $_reset";
+echo "$_green Done adding. $_reset";
+echo "$_blue  Listing crontable: $_reset";
 crontab -l;
