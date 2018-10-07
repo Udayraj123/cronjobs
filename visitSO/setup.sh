@@ -58,21 +58,23 @@ fi
 # msg goes into stderr
 crontab -l > ./tmp_cron 2> /dev/null
 
-echo "$_blue Confirm the cron line: $_yellow (You can change interval in hours by changing */6 part) $_reset";
+echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
 CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 read -i "$CRON_LINE" -e CRON_LINE
 
 # assigning command returns the return signal of RHS
-output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
+# but newline characters get lost
+# output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
+cat ./tmp_cron | grep --color "$FILE_DIR";
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
 	echo
 	echo "$_yellow Seems like a similar job entry is already present in cron table.$_reset";
-	echo $output;
+	echo -ne $output;
 	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
 	read -p "$_yellow Do you still want to add this line? (any/n) $_reset" CONTINUE;
 	if [ $CONTINUE == "n" ];then
-		echo "Exiting";
+		echo "$_green Exiting $_reset";
 		rm ./tmp_cron;
 		exit 0;
 	fi
