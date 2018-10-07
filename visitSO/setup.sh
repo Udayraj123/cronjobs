@@ -11,12 +11,29 @@ _green=$(tput setaf 2);	_yellow=$(tput setaf 3);
 _reset=$(tput sgr0);		_bold=$(tput bold);
 
 echo "$_bold$_yellow Welcome to SO Login Script! $_reset"
-echo "$_green Complete two badges (Enthusiast & Fanatic) by adding a cron job! $_reset";
+echo "$_yellow Complete two badges (Enthusiast & Fanatic) by adding a cron job! $_reset";
+
+FILE_NAME="visitSO.sh"
+# read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
 
 # when run from full path
 FILE_DIR="${BASH_SOURCE%/*}";
 # when run locally
-if [ ! -d $FILE_DIR ]; then FILE_DIR="$PWD"; fi
+if [ ! -d $FILE_DIR ] || [ "$FILE_DIR" == "." ]; then FILE_DIR="$PWD"; fi
+
+FULL_PATH="$FILE_DIR/$FILE_NAME"
+
+if [ ! -e $FULL_PATH ]; then
+	echo "$_yellow Warning: visitSO.sh File not found at '$FULL_PATH' $_reset";
+	echo "$_yellow The cron job may not have any effect, Do you want to continue? (any/n) $_reset"
+	read CONTINUE;
+	if [ $CONTINUE == "n" ];then
+		echo "Exiting";
+		exit 0;
+	fi
+	# echo "Error: File not found: '$FULL_PATH'";
+	# exit 1;
+fi
 
 if [ ! -d $FILE_DIR/ignore ]; then 
 	echo "Creating ignore directory..";
@@ -38,21 +55,11 @@ if [ ! -f $login_file ]; then
 fi
 
 
-crontab -l > ./tmp_cron 2> /dev/null
 # msg goes into stderr
-FILE_NAME="visitSO.sh"
-# read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
+crontab -l > ./tmp_cron 2> /dev/null
 
-FULL_PATH="$FILE_DIR/$FILE_NAME"
-
-if [ ! -e $FULL_PATH ]; then
-	echo "$_yellow Warning: File not found: '$FULL_PATH' $_reset";
-	echo "$_yellow The cron job may not have any effect $_reset";
-	# echo "Error: File not found: '$FULL_PATH'";
-	# exit 1;
-fi
+echo "Confirm the cron line: (Default repeat = 6 hours, you can change the */6 part)";
 CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
-echo "Confirm the cron line: (Default repeat: 6 hours)";
 read -i "$CRON_LINE" -e CRON_LINE
 
 
