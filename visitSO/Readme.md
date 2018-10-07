@@ -1,11 +1,11 @@
 # Stackoverflow login script!
 ## How to use
-1. Make sure you can login using **email** and password on *http://stackoverflow.com*. 
+#### 1. Make sure you can login using **email** and password on *http://stackoverflow.com*. 
 
 If you logged in using facebook, goto your profile -> Edit Profile & Settings -> My logins(under 'SITE SETTINGS') -> 'add more logins'
  and add an email to login with.
 
-2. Run setup.sh
+#### 2. Run setup.sh
 
 ```bash setup.sh```
 
@@ -13,7 +13,7 @@ Enter the details and hit enter and Whola! The now you can sit back and relax, C
 
 :warning: **Enter credentials at your own risk! This script is best kept only for personal use.** :warning:
 
-3. Make sure it works!
+#### 3. Make sure it works!
 
 Just to make sure the script can login, you can run it now: 
 
@@ -37,7 +37,7 @@ When running setup.sh for the first time, it will ask you for your email and pas
 (Its pseudo-encryption as the key to decrypt the file is also used by the same script.)
 Then it will add a cron job in your linux system which looks like this: 
 
-> ` 0 */6 * * * bash /path/to/cronJobs/visitSO/visitSO.sh ;`
+``` 0 */6 * * * bash /path/to/cronJobs/visitSO/visitSO.sh ;```
 
 Which says:  
 > at 0th minute of every 6th hour of every day, run the script visitSO.sh
