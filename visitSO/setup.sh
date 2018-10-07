@@ -77,7 +77,7 @@ FOUND=$?;
 if [ "$FOUND" == "0" ]; then
 	echo "$_yellow Similar job(s) already present in cron table: $_reset";
 	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
-	read -p "$_yellow Do you still want to add this line? (any/n) $_reset" CONTINUE;
+	read -p "$_yellow Do you still want to continue adding the line? (any/n) $_reset" -i "n" CONTINUE;
 	if [ "$CONTINUE" == "n" ];then
 		echo "$_green Exiting $_reset";
 		rm ./tmp_cron;
@@ -93,6 +93,7 @@ echo "$CRON_LINE" >> ./tmp_cron;
 crontab ./tmp_cron;
 rm ./tmp_cron;
 echo "$_green Done adding. $_reset";
-echo "$_green Listing crontable: ";
+echo "$_green Listing crontable: $_reset";
+echo "$_yellow crontab -l ";
 crontab -l;
 echo "$_reset";
