@@ -11,7 +11,7 @@ _cyan=$(tput setaf 6);	_white=$(tput setaf 7);
 _reset=$(tput sgr0);		_bold=$(tput bold);
 
 echo "$_cyan Welcome to SO Login Script! $_reset"
-echo "$_yellow Complete two badges (Enthusiast & Fanatic) by adding a cron job! $_reset";
+echo "$_cyan Complete the Enthusiast & Fanatic badges by adding this simple cron job! $_reset";
 
 FILE_NAME="visitSO.sh"
 # read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
@@ -58,29 +58,30 @@ fi
 # msg goes into stderr
 crontab -l > ./tmp_cron 2> /dev/null
 
-echo "$_blue Confirm the cron line: (You can change interval in hours by changing */6 part) $reset";
+echo "$_blue Confirm the cron line: $_yellow (You can change interval in hours by changing */6 part) $_reset";
 CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 read -i "$CRON_LINE" -e CRON_LINE
 
-
-cat ./tmp_cron | grep --color "$FILE_DIR"
+# assigning command returns the return signal of RHS
+output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
 	echo
-	echo "$_yellow Seems like a similar job is already present. You can clear the cron table by running 'crontab -r' $_reset";
-	echo "$_yellow Do you still want to add this line? (any/n) $reset"
-	read CONTINUE;
+	echo "$_yellow Seems like a similar job entry is already present in cron table.$_reset";
+	echo $output;
+	# echo "$_yellow Note: You can clear the cron table later by running 'crontab -r' $_reset"
+	read -p "$_yellow Do you still want to add this line? (any/n) $_reset" CONTINUE;
 	if [ $CONTINUE == "n" ];then
 		echo "Exiting";
 		rm ./tmp_cron;
 		exit 0;
 	fi
 fi
-echo "$_yellow Adding cron job.. $reset"
+echo "$_blue Adding cron job.. $_reset"
 #echo new cron into cron file
 echo "$CRON_LINE" >> ./tmp_cron;
 #install new cron file
 crontab ./tmp_cron;
 rm ./tmp_cron;
-echo "$_green Done adding. Listing crontable: $reset";
+echo "$_green Done adding. Listing crontable: $_reset";
 crontab -l;
