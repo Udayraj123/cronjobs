@@ -63,10 +63,10 @@ crontab -l > ./tmp_cron 2> /dev/null
 # echo "$_blue Confirm the cron line to add:"; #  $_yellow (You can change interval in hours by changing the '*/6' part) $_reset
 # CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
 CRON_LINE="0 */6 * * * bash $FULL_PATH ;";
-echo "$_blue Confirm the cron line to add: $_reset"
+echo "$_blue Confirm the cron line to add: $_yellow"
 # colors dont go well with read command
 read -i "$CRON_LINE" -e CRON_LINE
-
+echo "$_reset";
 # assigning command returns the return signal of RHS
 # output=$(cat ./tmp_cron | grep --color "$FILE_DIR")
 # but newline characters get lost!
@@ -83,7 +83,7 @@ if [ "$FOUND" == "0" ]; then
 		rm ./tmp_cron;
 		exit 0;
 	fi
-else;
+else
 	echo "$_blue No matching entry exists.";
 fi
 echo "$_blue Adding cron job.. $_reset"
