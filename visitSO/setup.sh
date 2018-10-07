@@ -4,8 +4,14 @@
 #     echo "Please run as root";
 #     exit 1;
 # fi
+# _black=$(tput setaf 0);	_red=$(tput setaf 1);
+_green=$(tput setaf 2);	_yellow=$(tput setaf 3);
+# _blue=$(tput setaf 4);	_magenta=$(tput setaf 5);
+# _cyan=$(tput setaf 6);	_white=$(tput setaf 7);
+_reset=$(tput sgr0);		_bold=$(tput bold);
 
-echo "Welcome to SO Login Script! Complete two badges (Enthusiast & Fanatic) by adding a cron job!";
+echo "$_bold$_yellow Welcome to SO Login Script! $_reset"
+echo "$_green Complete two badges (Enthusiast & Fanatic) by adding a cron job! $_reset";
 
 # when run from full path
 FILE_DIR="${BASH_SOURCE%/*}";
@@ -32,7 +38,7 @@ if [ ! -f $login_file ]; then
 fi
 
 
-crontab -l > ./tmp_cron
+crontab -l > ./tmp_cron 2> /dev/null
 # msg goes into stderr
 FILE_NAME="visitSO.sh"
 # read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
@@ -40,20 +46,22 @@ FILE_NAME="visitSO.sh"
 FULL_PATH="$FILE_DIR/$FILE_NAME"
 
 if [ ! -e $FULL_PATH ]; then
-	echo "Warning: File not found: '$FULL_PATH'";
-	echo "The cron job may not have any effect";
+	echo "$_yellow Warning: File not found: '$FULL_PATH' $_reset";
+	echo "$_yellow The cron job may not have any effect $_reset";
 	# echo "Error: File not found: '$FULL_PATH'";
 	# exit 1;
 fi
 CRON_LINE="0 */6 * * * cd $FILE_DIR && bash $FULL_PATH ;";
-read -p "Confirm the cron line: \n" -i "$CRON_LINE" -e CRON_LINE
+echo "Confirm the cron line: (Default repeat: 6 hours)";
+read -i "$CRON_LINE" -e CRON_LINE
+
 
 cat ./tmp_cron | grep --color "$FILE_DIR"
-
 FOUND=$?;
 if [ "$FOUND" == "0" ]; then
 	echo
-	echo "Seems like a similar job is already present. Do you still want to add this line? (any/n)";
+	echo "Seems like a similar job is already present. $_yellow You can clear the cron table by running 'crontab -r' $_reset";
+	echo "Do you still want to add this line? (any/n)"
 	read CONTINUE;
 	if [ $CONTINUE == "n" ];then
 		echo "Exiting";
@@ -61,10 +69,10 @@ if [ "$FOUND" == "0" ]; then
 		exit 0;
 	fi
 fi
-echo "Adding cron job.."
+echo "$_green Adding cron job.. $reset"
 #echo new cron into cron file
 echo "$CRON_LINE" >> ./tmp_cron;
 #install new cron file
 crontab ./tmp_cron;
-echo "Done. Cron will now run $FILE_DIR/$FILE_NAME periodically";
+echo "$_green Done. Cron will now run $FILE_DIR/$FILE_NAME periodically $reset";
 rm ./tmp_cron;
