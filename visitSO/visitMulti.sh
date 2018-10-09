@@ -38,7 +38,7 @@ fi
 echo "Loading details from encrypted file";
 LOGIN_DATA=$(cat $login_file | openssl enc -d -aes-128-cbc -a -salt -pass pass:mysalt)
 
-for URL_FILE in "domains.list subdomains.list"; do
+for URL_FILE in "domains.list" "subdomains.list"; do
 	# Loop through every url
 	ALL_URLS=$(cat $FILE_DIR/$URL_FILE);
 	for LOOP_URL in $ALL_URLS; do 
