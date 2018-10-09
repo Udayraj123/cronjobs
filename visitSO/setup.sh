@@ -17,7 +17,7 @@ echo "$_cyan Complete the Enthusiast & Fanatic badges by adding a simple cron jo
 echo
 FILE_NAME="visitSO.sh"
 # read -p "Confirm the file name: \n" -i "$FILE_NAME" -e FILE_NAME
-
+ 
 # when run from full path
 FILE_DIR="${BASH_SOURCE%/*}";
 # when run locally
@@ -51,7 +51,7 @@ if [ ! -f $login_file ]; then
 	echo -n "$_blue Enter password for '$EMAIL' : ";
 	read -rs PASSWD
 	LOGIN_DATA="email=$EMAIL&password=$PASSWD";	
-	echo "$_blue Saving details in (pseudo)encrypted file";
+	echo "$_blue Saving details in encrypted file";
 	touch $login_file;
 	echo "$LOGIN_DATA" | openssl enc -aes-128-cbc -a -salt -pass pass:mysalt > $login_file;	
 fi
