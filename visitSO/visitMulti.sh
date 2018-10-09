@@ -47,21 +47,21 @@ for LOOP_URL in $ALL_URLS; do
 		# tho This script can work on any url that uses 'email' & 'password' as form parameters
 	    LOGIN_URL="$LOOP_URL"
 		cronLog "Logging in at '$LOGIN_URL'...";
-		# curl -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers "$LOGIN_URL"
+		curl -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers "$LOGIN_URL"
 	else
 	# Lets curl!
 	    VISIT_URL="$LOOP_URL"
 		echo
 		cronLog "Done. Visiting '$VISIT_URL'..";
-		# curl -o "$FILE_DIR/ignore/visited.html" -L -b $FILE_DIR/ignore/headers "$VISIT_URL"
+		curl -o "$FILE_DIR/ignore/visited.html" -L -b $FILE_DIR/ignore/headers "$VISIT_URL"
 		echo
 		cronLog "Done.";
 		output=$(cat "$FILE_DIR/ignore/visited.html" | grep --color my-profile);
 		cronLog "$output";
-		rm $FILE_DIR/ignore/headers;
 		# rm $FILE_DIR/ignore/visited.html;    
 	fi 
 done
+rm $FILE_DIR/ignore/headers;
 LOGIN_DATA='clearedpass';
 
 # Read urls line by line
