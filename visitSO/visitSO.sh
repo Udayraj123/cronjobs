@@ -45,8 +45,8 @@ echo
 cronLog "Done. Visiting Home page..";
 curl -o $FILE_DIR/ignore/stackoverflow.html -L -b $FILE_DIR/ignore/headers https://stackoverflow.com/
 echo
-cronLog "Done.";
-output=$(cat $FILE_DIR/ignore/stackoverflow.html | grep --color my-profile);
+cronLog "Done. Searching for 'my-profile'";
+output=$(cat $FILE_DIR/ignore/stackoverflow.html | grep --color -i my-profile);
 cronLog "$output";
 
 rm $FILE_DIR/ignore/headers;
