@@ -38,9 +38,13 @@ fi
 echo "Loading details from encrypted file";
 LOGIN_DATA=$(cat $login_file | openssl enc -d -aes-128-cbc -a -salt -pass pass:mysalt)
 
-# Lets curl!
 cronLog "Logging in...";
 curl -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers https://stackoverflow.com/users/login
+for i in {1..10}
+do
+cronLog "Visiting with same login after 10s intervals";
+sleep 10;
+# Lets curl!
 echo
 cronLog "Done. Visiting Home page..";
 curl -o $FILE_DIR/ignore/stackoverflow.html -L -b $FILE_DIR/ignore/headers https://stackoverflow.com/
@@ -48,7 +52,8 @@ echo
 cronLog "Done. Searching for 'my-profile'";
 output=$(cat $FILE_DIR/ignore/stackoverflow.html | grep --color -i my-profile);
 cronLog "$output";
-
+done;
+# cleanup
 rm $FILE_DIR/ignore/headers;
 LOGIN_DATA='clearedpass';
 
