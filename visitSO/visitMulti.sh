@@ -47,12 +47,12 @@ for URL_FILE in "domains.list"; do
 		# fi 
 		# This script can work on any url that uses 'email' & 'password' as form parameters
 		LOGIN_URL="$LOOP_URL/users/login"
+		VISIT_URL="$LOOP_URL"
 
 		cronLog "Logging in at '$LOGIN_URL'...";
 		curl  -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers "$LOGIN_URL"
 		cronLog "Done. Visiting '$VISIT_URL'..";
 		# Lets curl!
-		VISIT_URL="$LOOP_URL"
 		for i in {1..10}
 		do
 			cronLog "Visiting with same login at 10s intervals";
