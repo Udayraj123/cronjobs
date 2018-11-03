@@ -38,7 +38,8 @@ fi
 echo "Loading details from encrypted file";
 LOGIN_DATA=$(cat $login_file | openssl enc -d -aes-128-cbc -a -salt -pass pass:mysalt)
 
-for URL_FILE in "domains.list" "subdomains.list"; do
+#for URL_FILE in "domains.list" "subdomains.list"; do
+for URL_FILE in "domains.list"; do
 	# Loop through every url
 	ALL_URLS=$(cat $FILE_DIR/$URL_FILE);
 	for LOOP_URL in $ALL_URLS; do 
@@ -46,15 +47,15 @@ for URL_FILE in "domains.list" "subdomains.list"; do
 			# first url is the login url, rest are visit urls.
 			# Make sure login url is one of the stackexchange sites and not stackoverflow, etc!
 			# tho This script can work on any url that uses 'email' & 'password' as form parameters
-		    LOGIN_URL="$LOOP_URL"
+			LOGIN_URL="$LOOP_URL"
 			cronLog "Logging in at '$LOGIN_URL'...";
-			curl -v -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers "$LOGIN_URL"
+			curl  -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers "$LOGIN_URL"
 		else
 		# Lets curl!
-		    VISIT_URL="$LOOP_URL"
+  			VISIT_URL="$LOOP_URL"
 			echo
 			cronLog "Done. Visiting '$VISIT_URL'..";
-			curl -v -o "$FILE_DIR/ignore/visited.html" -L -b $FILE_DIR/ignore/headers "$VISIT_URL"
+			curl  -o "$FILE_DIR/ignore/visited.html" -L -b $FILE_DIR/ignore/headers "$VISIT_URL"
 			echo
 			cronLog "Done. Searching for 'my-profile'";
 			output=$(cat "$FILE_DIR/ignore/visited.html" | grep --color -i my-profile);
