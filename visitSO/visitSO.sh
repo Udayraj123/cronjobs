@@ -42,16 +42,14 @@ cronLog "Logging in...";
 curl -d "$LOGIN_DATA" --dump-header $FILE_DIR/ignore/headers https://stackoverflow.com/users/login
 for i in {1..10}
 do
-cronLog "Visiting with same login after 10s intervals";
-sleep 10;
-# Lets curl!
-echo
-cronLog "Done. Visiting Home page..";
-curl -o $FILE_DIR/ignore/stackoverflow.html -L -b $FILE_DIR/ignore/headers https://stackoverflow.com/
-echo
-cronLog "Done. Searching for 'my-profile'";
-output=$(cat $FILE_DIR/ignore/stackoverflow.html | grep --color -i my-profile);
-cronLog "$output";
+	cronLog "Visiting with same login after 10s intervals";
+	echo
+	curl -o "$FILE_DIR/ignore/stackoverflow.html" -L -b $FILE_DIR/ignore/headers https://stackoverflow.com/
+	echo
+	cronLog "Done. Searching for 'my-profile'";
+	output=$(cat $FILE_DIR/ignore/stackoverflow.html | grep --color -i my-profile);
+	cronLog "$output";
+	sleep 10;
 done;
 # cleanup
 rm $FILE_DIR/ignore/headers;
