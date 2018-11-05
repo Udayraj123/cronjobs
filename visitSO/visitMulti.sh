@@ -21,12 +21,8 @@ for URL_FILE in "domains.list"; do
 		LOGIN_URL="$LOOP_URL/users/login";
 		VISIT_URL="$LOOP_URL";
 		VISIT_DOMAIN=$(echo "$LOOP_URL" | cut -d'/' -f3 | cut -d':' -f1);
-		echo "Domain: $VISIT_DOMAIN";
+		# echo "Domain: $VISIT_DOMAIN";
 		cronLog "Logging in at '$LOGIN_URL'...";
-		curl  -d "$LOGIN_DATA" --dump-header $FULL_PATH/ignore/headers 
-		"$LOGIN_URL"
-
-		cronLog "Logging in...";
 		curl \
 		-H "authority: $VISIT_DOMAIN" \
 		-H "upgrade-insecure-requests: 1" \
@@ -42,14 +38,13 @@ for URL_FILE in "domains.list"; do
 		# Lets curl!
 		for i in {1..2}
 		do
-			cronLog "Visiting with same login at 10s intervals";
+			[[ "$i" != "0" ]] && cronLog "Visiting with same login at 10s intervals" && sleep 10;
 			echo
 			curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$VISIT_URL"
 			echo
 			cronLog "Done. Searching for 'my-profile'";
 			output=$(cat "$FULL_PATH/ignore/visited.html" | grep --color -i my-profile);
 			cronLog "$output";
-			sleep 10;
 		done;
 	done
 done
