@@ -39,7 +39,7 @@ for URL_FILE in "domains.list"; do
 		cronLog "Done. Visiting '$VISIT_URL'..";
 		PROFILE_LINK='';
 		# Lets curl!
-		for i in {1..2}
+		for i in {1..6}
 		do
 			[[ "$i" != "1" ]] && cronLog "Waiting 10s before next visit" && sleep 10;
 			echo

@@ -25,7 +25,7 @@ https://stackoverflow.com/users/login;
 LOOP_URL="https://stackoverflow.com";
 VISIT_URL="$LOOP_URL";
 PROFILE_LINK=''
-for i in {1..2}
+for i in {1..6}
 do
 	[[ "$i" != "1" ]] && cronLog "Waiting 10s before next visit" && sleep 10;
 	echo
