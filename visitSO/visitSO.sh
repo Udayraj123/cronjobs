@@ -22,16 +22,32 @@ curl \
 -d "$LOGIN_DATA" --dump-header $FULL_PATH/ignore/headers \
 https://stackoverflow.com/users/login;
 
+LOOP_URL="https://stackoverflow.com";
+VISIT_URL="$LOOP_URL";
+PROFILE_LINK=''
 for i in {1..2}
 do
-	cronLog "Visiting with same login after 10s intervals";
+	[[ "$i" != "1" ]] && cronLog "Waiting 10s before next visit" && sleep 10;
 	echo
-	curl -o "$FULL_PATH/ignore/stackoverflow.html" -L -b $FULL_PATH/ignore/headers https://stackoverflow.com/
-	echo
-	cronLog "Done. Searching for 'my-profile'";
-	output=$(cat $FULL_PATH/ignore/stackoverflow.html | grep --color -i my-profile);
-	cronLog "$output";
-	sleep 10;
+	if [ "$PROFILE_LINK" == "" ]; then
+		cronLog "Visiting Home page..";
+		echo
+		curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$VISIT_URL"
+		echo
+		cronLog "Done. Searching for 'my-profile'";
+		output=$(cat "$FULL_PATH/ignore/visited.html" | grep --color -i my-profile);
+		cronLog "$output";
+
+		PROFILE_LINK=$(echo $output | awk -F'\"' '{print $2}');
+		PROFILE_LINK="${LOOP_URL}${PROFILE_LINK}"
+		cronLog "Extracted Profile Link:  $PROFILE_LINK "
+	else
+		cronLog "Visiting Profile page..";
+		curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$PROFILE_LINK"
+		output=$(cat "$FULL_PATH/ignore/visited.html");
+		cronLog "$output";
+		PROFILE_LINK=''
+	fi
 done;
 # cleanup
 rm $FULL_PATH/ignore/headers;

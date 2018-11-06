@@ -22,7 +22,9 @@ for URL_FILE in "domains.list"; do
 		VISIT_URL="$LOOP_URL";
 		VISIT_DOMAIN=$(echo "$LOOP_URL" | cut -d'/' -f3 | cut -d':' -f1);
 		# echo "Domain: $VISIT_DOMAIN";
+		echo
 		cronLog "Logging in at '$LOGIN_URL'...";
+		echo
 		curl \
 		-H "authority: $VISIT_DOMAIN" \
 		-H "upgrade-insecure-requests: 1" \
@@ -52,7 +54,7 @@ for URL_FILE in "domains.list"; do
 				
 				PROFILE_LINK=$(echo $output | awk -F'\"' '{print $2}');
 				PROFILE_LINK="${LOOP_URL}${PROFILE_LINK}"
-				cronLog "PROFILE_LINK:  $PROFILE_LINK "
+				cronLog "Extracted Profile Link:  $PROFILE_LINK "
 			else
 				cronLog "Visiting Profile page..";
 				curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$PROFILE_LINK"
