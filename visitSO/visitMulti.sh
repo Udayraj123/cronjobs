@@ -35,15 +35,28 @@ for URL_FILE in "domains.list"; do
 		"$LOGIN_URL";
 
 		cronLog "Done. Visiting '$VISIT_URL'..";
+		PROFILE_LINK='';
 		# Lets curl!
 		for i in {1..2}
 		do
-			[[ "$i" != "0" ]] && cronLog "Visiting with same login at 10s intervals" && sleep 10;
-			echo
-			curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$VISIT_URL"
-			echo
-			cronLog "Done. Searching for 'my-profile'";
-			output=$(cat "$FULL_PATH/ignore/visited.html" | grep --color -i my-profile);
+			[[ "$i" != "0" ]] && cronLog "Visiting with at 10s intervals" && sleep 10;
+			if [ "$PROFILE_LINK" == "" ]; then
+				cronLog "Visiting Home page..";
+				echo
+				curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$VISIT_URL"
+				echo
+				cronLog "Done. Searching for 'my-profile'";
+				output=$(cat "$FULL_PATH/ignore/visited.html" | grep --color -i my-profile);
+				
+				PROFILE_LINK=$(echo $output | awk -F'\"' '{print $2}');
+				PROFILE_LINK="${LOOP_URL}${PROFILE_LINK}"
+				echo "PROFILE_LINK: $PROFILE_LINK "
+			else
+				cronLog "Visiting Profile page..";
+				curl  -o "$FULL_PATH/ignore/visited.html" -L -b $FULL_PATH/ignore/headers "$PROFILE_LINK"
+				output=$(cat "$FULL_PATH/ignore/visited.html" | head -n 20 );
+				PROFILE_LINK=''
+			fi
 			cronLog "$output";
 		done;
 	done
