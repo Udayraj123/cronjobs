@@ -9,9 +9,9 @@ If you logged in using facebook, goto your profile -> Edit Profile & Settings ->
 
 ```bash setup.sh```
 
-Enter the details and hit enter and Whola! The now you can sit back and relax, Cron will login for you!
+Just enter your login credentials and voila! Now you can sit back and relax, cron will login and visit the site for you!
 
-:warning: **Enter credentials at your own risk! This script is best kept only for personal use.** :warning:
+:warning: **Enter credentials at your own risk! It is not recommended to use this script on shared computers.** :warning:
 
 #### 3. Make sure it works!
 
